@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- the nav mark: a 3/15-rounded square split on the diagonal, accent over warm -->
+  <defs><clipPath id="r"><rect width="64" height="64" rx="12.8"/></clipPath></defs>
+  <g clip-path="url(#r)">
+    <polygon points="0,0 64,0 0,64" fill="#2c5aa0"/>
+    <polygon points="64,0 64,64 0,64" fill="#b2501f"/>
+  </g>
+</svg>
