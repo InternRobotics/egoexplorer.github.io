@@ -116,7 +116,9 @@ def panel(head, dot, rows, foot, width=272, delay=420):
     rr = "".join(
         f'<div class="lrow" style="--d:{delay+i*95}ms"><i class="sw {c}"></i>'
         f'<span>{a}</span><b>{b}</b></div>' for i, (c, a, b) in enumerate(rows))
-    return (f'<div class="panel lay" style="width:{width}px">'
+    # width is a floor, not a box: the rows are nowrap, so a fixed width let any
+    # change in font metrics push a value through the card's right edge
+    return (f'<div class="panel lay" style="min-width:{width}px;width:max-content">'
             f'<div class="phead"><span class="pdot {dot}"></span>{head}</div>'
             f'{rr}<div class="pfoot">{foot}</div></div>')
 
@@ -281,6 +283,7 @@ p.sub{{margin-top:22px;font-size:27px;line-height:1.5;color:#B4BAC4;max-width:73
 .pdot{{width:7px;height:7px;border-radius:9px;background:{ACC};
   box-shadow:0 0 0 4px rgba(226,118,42,.16)}}
 .pdot.cool{{background:{COOL};box-shadow:0 0 0 4px rgba(91,139,208,.16)}}
+.lay .pfoot{{width:0;min-width:100%}}
 .pfoot{{margin-top:15px;padding-top:13px;border-top:1px solid rgba(255,255,255,.055);
   font-size:17px;color:#767F8D;letter-spacing:.01em;line-height:1.45}}
 
