@@ -2,7 +2,7 @@
 """Lay the typography over the pipeline film.
 
 The picture underneath is now a full-bleed render of a real session inside a
-mocked room (room_film.py), so the type sits on a scrim down the left third
+mocked room (room_film.py), so the type sits on a scrim over the left 42%
 rather than beside a boxed panel — which is also what fixes the old version
 clipping the figure at the edge of its inset.
 
@@ -228,8 +228,13 @@ CSS = FONTS + f"""
 *{{margin:0;padding:0;box-sizing:border-box}}
 html,body{{width:1920px;height:1080px;background:transparent}}
 .scrim{{position:absolute;inset:0;pointer-events:none;
+  /* The scrim has to cover the type and then get out of the way. It used to
+     run to 80% of the width and was still 62% opaque at the midpoint, which
+     put a wash over 65% of the right half -- where the render is -- and read
+     as part of the picture being covered. The type ends at about 42%, so the
+     stops now hold full strength under it and are gone by 60%. */
   background:linear-gradient(90deg,rgba(14,16,20,.94) 0%,rgba(14,16,20,.90) 34%,
-    rgba(14,16,20,.62) 50%,rgba(14,16,20,.12) 68%,rgba(14,16,20,0) 80%),
+    rgba(14,16,20,.72) 44%,rgba(14,16,20,.18) 54%,rgba(14,16,20,0) 60%),
     linear-gradient(0deg,rgba(14,16,20,.55) 0%,rgba(14,16,20,0) 26%)}}
 body{{font-family:'Inter',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}}
 
