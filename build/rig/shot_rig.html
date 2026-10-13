@@ -1,0 +1,39 @@
+<!doctype html><meta charset="utf-8"><title>rig shot</title>
+<style>html,body{margin:0;background:#ffffff;overflow:hidden}
+#box{position:relative;width:1200px;height:1200px;overflow:hidden;background:#fff}
+iframe{position:absolute;border:0;width:2200px;height:2000px;left:-9999px;top:0}</style>
+<div id="box"><canvas id="out" width="1200" height="1200"></canvas></div>
+<iframe id="f"></iframe>
+<script>
+const q = new URLSearchParams(location.search);
+const view = q.get('view') || 'oblique';
+const zoom = q.get('zoom');
+const f = document.getElementById('f');
+f.src = 'smplx_rig.html?view=' + view + (zoom ? '&zoom=' + zoom : '');
+f.addEventListener('load', async () => {
+  const d = f.contentDocument, w = f.contentWindow;
+  // wait for the viewer to finish building its scene
+  for (let i = 0; i < 300 && d.body.dataset.ready !== 'true'; i++)
+    await new Promise(r => setTimeout(r, 50));
+  // the page's own annotations are in Chinese and point at internal files;
+  // the site supplies its own labels, so strip the overlay down to the render
+  for (const id of ['annots', 'frames']) {
+    const cb = d.getElementById(id);
+    if (cb && cb.checked) { cb.checked = false; cb.dispatchEvent(new Event('change')); }
+  }
+  const css = d.createElement('style');
+  css.textContent = '#labels,#wires,.legend{display:none!important}' +
+                    '#viewport{background:#ffffff!important;border:0!important;' +
+                    'border-radius:0!important;height:1600px!important}';
+  d.head.appendChild(css);
+  w.dispatchEvent(new Event('resize'));
+  await new Promise(r => setTimeout(r, 900));
+  // copy the viewer's canvas into ours, cropped square about the subject
+  const src = d.getElementById('canvas');
+  const o = document.getElementById('out').getContext('2d');
+  o.fillStyle = '#fff'; o.fillRect(0, 0, 1200, 1200);
+  const s = Math.min(src.width, src.height);
+  o.drawImage(src, (src.width - s) / 2, (src.height - s) / 2, s, s, 0, 0, 1200, 1200);
+  document.body.dataset.done = '1';
+});
+</script>

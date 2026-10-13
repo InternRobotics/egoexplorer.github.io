@@ -1,0 +1,11 @@
+# Build intermediates: large, regenerable, and useless to a visitor.
+# assets/ is deliberately NOT ignored — GitHub Pages serves the site from the
+# repo, so the videos and posters have to be committed or the page is blank.
+build/film/bake/
+build/film/type_frames/
+build/film/frames/
+build/film/out/
+build/film/base.mp4
+build/film/*.bak
+**/__pycache__/
+.DS_Store

@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en" data-motion>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0d10" />
+    <title>EgoExplorer: A Vision–Motion–Touch Observatory for Human Loco-Manipulation In Situ</title>
+    <meta name="description" content="A 100+ hour wearable capture of human loco-manipulation: egocentric video, whole-body motion, finger articulation and measured touch, aligned on one clock." />
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+          href="fonts/latin-4iCs6KVjbNBYlgoKfw72nU6AF7xm.woff2" />
+    <link rel="stylesheet" href="styles.css?v=30" />
+  </head>
+  <body>
+    <header class="nav">
+      <a class="nav-mark" href="#top"><span class="mark-glyph" aria-hidden="true"></span>EgoExplorer</a>
+      <nav class="nav-links">
+        <a href="#tasks">Tasks</a>
+        <a href="#streams">Streams</a>
+        <a href="#rig">Capture</a>
+        <a href="#pipeline">Reconstruction</a>
+        <a href="#environments">Scenes</a>
+        <a href="#humanoid">Humanoid</a>
+        <a href="#citation">Cite</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-sm" href="#" data-pending="true">Paper</a>
+        <a class="btn btn-sm btn-primary" href="https://huggingface.co/datasets/InternRobotics/EgoExplorer" target="_blank" rel="noopener">Hugging Face</a>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- ───────────────────────── hero ───────────────────────── -->
+      <section class="hero">
+        <video class="hero-bed" autoplay muted loop playsinline preload="auto"
+               poster="assets/hero-poster.jpg?v=25" aria-hidden="true">
+          <source src="assets/hero.mp4?v=29" type="video/mp4" />
+        </video>
+        <div class="hero-veil" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Dataset · 100+ hours, growing · 2,715 recordings</p>
+          <h1><span class="h1-name">EgoExplorer</span><span class="h1-rest">A Vision–Motion–Touch Observatory for Human Loco-Manipulation In Situ</span></h1>
+          <p class="hero-meta">The reconstructed body, replayed inside the room it was captured in — with the head camera it saw through.</p>
+          <!-- TODO: fill in the four URLs once the paper, repo and HF dataset are public. -->
+          <div class="hero-links">
+            <a class="btn btn-primary" href="#" data-pending="true">
+              <span class="btn-ico" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4">
+                  <path d="M4 1.6h5l3 3v10H4z" stroke-linejoin="round"/><path d="M9 1.6v3.2h3"/>
+                  <path d="M6 8.2h4M6 10.6h4"/></svg>
+              </span>Read the paper
+            </a>
+            <a class="btn" href="https://huggingface.co/datasets/InternRobotics/EgoExplorer" target="_blank" rel="noopener">
+              <span class="btn-ico" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4">
+                  <circle cx="8" cy="7.4" r="5.2"/><path d="M5.7 8.6a2.9 2.9 0 0 0 4.6 0"/>
+                  <circle cx="6.2" cy="6.2" r=".7" fill="currentColor" stroke="none"/>
+                  <circle cx="9.8" cy="6.2" r=".7" fill="currentColor" stroke="none"/></svg>
+              </span>Dataset on Hugging Face
+            </a>
+            <a class="btn btn-quiet" href="https://github.com/InternRobotics/EgoExplorer" target="_blank" rel="noopener">
+              <span class="btn-ico" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 10.5 3.2 7.7 6 4.9M10 4.9l2.8 2.8L10 10.5"/></svg>
+              </span>Capture toolkit
+            </a>
+          </div>
+        </div>
+        <div class="hero-fade" aria-hidden="true"></div>
+      </section>
+
+      <!-- ───────────────────────── opening ───────────────────────── -->
+      <section class="prose section">
+        <p class="lede">Humanoids are built for human spaces, and almost nothing useful in those spaces happens standing still. A person fetching a reagent walks to the bench, leans in, adjusts their stance so both hands can reach, and keeps the grasp while they turn away. The walking and the manipulation are not two phases. They are one behaviour.</p>
+
+        <p>That is the behaviour we want robots to learn from, and it is the behaviour today's portable datasets record least well. Egocentric video scales beautifully and carries enormous visual and semantic breadth<cite data-r="grauman2022ego4d grauman2024egoexo4d damen2022epic"></cite>, but the body that produced the view is unobserved. Wearable trackers recover the body<cite data-r="jiang2022avatarposer ponton2023sparseposer du2023agrol dai2024hmdposer"></cite>, but usually stop at the wrist. Glove and contact datasets recover the fingers, or the touch, and usually drop the walking<cite data-r="taheri2020grab kim2024parahome song2025opentouch zhao2025egopressure"></cite>. Each one is a true recording of part of the behaviour, and the part they all drop is the coupling between the parts.</p>
+
+        <p>The datasets that do carry body and view together are mostly captured in instrumented space, or carry the body without the hands<cite data-r="ma2024nymeria detone2026nymeriaplus zhang2022egobody fan2024emhi"></cite>. We built <strong class="key">EgoExplorer</strong> to record that coupling: an observatory of human loco-manipulation — 100+ hours and growing, 2,715 recordings — captured with a wearable rig light enough to walk between a chemistry bench, a factory bay and a kitchen. Four streams — what the person saw, how the whole body moved, what every finger did, and where the hands actually pressed — are recorded together, on one clock, in rooms we did not instrument.</p>
+      </section>
+
+      <!-- ═══════════════ chapter 01 — every task ═══════════════ -->
+      <section class="chapter" id="tasks">
+        <div class="chapter-inner">
+          <div class="chapter-head">
+            <p class="ch-no">01 / COVERAGE</p>
+            <h2 class="ch-title">Ten task templates, one rig, five rooms</h2>
+            <p class="ch-sub">Six laboratory procedures and four household tasks. Same rig, same calibration protocol, no instrumentation in the room. Every panel below is a different session, playing at once.</p>
+          </div>
+          <div class="chapter-stage strip">
+            <video autoplay muted loop playsinline preload="metadata" class="stage-video">
+              <source src="assets/montage_tasks.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <ol class="tile-key" aria-label="Tasks, in reading order">
+            <li>Weighing</li><li>Liquid–liquid extraction</li><li>Reaction setup</li>
+            <li>Rotary evaporation</li><li>Oven drying</li>
+            <li>Column chromatography</li><li>Folding a cardboard box</li>
+            <li>Bookshelf organisation</li><li>Clothes folding</li><li>Sandwich making</li>
+          </ol>
+          <div class="ch-stats">
+            <div class="stat-live"><span class="n">100<i class="up" aria-hidden="true">+</i></span><span class="l"><span class="live-dot" aria-hidden="true"></span>hours · growing</span></div>
+            <div><span class="n">2,715</span><span class="l">recordings</span></div>
+            <div><span class="n">10</span><span class="l">task templates</span></div>
+            <div><span class="n">5</span><span class="l">environments</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ chapter 02 — four streams ═══════════════ -->
+      <section class="chapter chapter-alt" id="streams">
+        <div class="chapter-inner">
+          <div class="chapter-head">
+            <p class="ch-no">02 / ONE RECORDING</p>
+            <h2 class="ch-title">Four streams, one clock</h2>
+            <p class="ch-sub">Every recording carries all four at every instant. They are shown here as separate views of the same moment, driven by a single playhead — because the point of the dataset is that they are simultaneous, not that they exist.</p>
+          </div>
+
+          <div class="picker" id="task-picker" role="tablist" aria-label="Sessions"></div>
+
+          <div class="streams" id="streams-grid">
+            <figure class="stream">
+              <div class="stream-cap"><span class="sn">A</span>EGOCENTRIC VIDEO</div>
+              <canvas data-stream="ego" width="586" height="330"></canvas>
+              <figcaption>What the head camera saw.</figcaption>
+            </figure>
+            <figure class="stream">
+              <div class="stream-cap"><span class="sn">B</span>WHOLE-BODY MOTION</div>
+              <canvas data-stream="body" width="492" height="342"></canvas>
+              <figcaption>Metric SMPL-X<cite data-r="pavlakos2019smplx"></cite>, reconstructed from five tracker poses.</figcaption>
+            </figure>
+            <figure class="stream">
+              <div class="stream-cap"><span class="sn">C</span>FINGER ARTICULATION</div>
+              <canvas data-stream="fingers" width="348" height="196"></canvas>
+              <figcaption>Both hands, measured by the glove — not inferred from pixels.</figcaption>
+            </figure>
+            <figure class="stream">
+              <div class="stream-cap"><span class="sn">D</span>TACTILE CONTACT</div>
+              <canvas data-stream="tactile" width="348" height="196"></canvas>
+              <figcaption>17 regions per hand. Shading is measured pressure.</figcaption>
+            </figure>
+          </div>
+
+          <div class="transport">
+            <button id="pp" type="button" aria-label="Play or pause"><span class="ico-play"></span></button>
+            <div class="tl" id="tl" role="slider" aria-label="Timeline" tabindex="0">
+              <div class="tl-segs" id="tl-segs"></div>
+              <div class="tl-head" id="tl-head"></div>
+            </div>
+            <span class="tl-time" id="tl-time">0:00</span>
+            <span class="tl-meta" id="tl-meta"></span>
+          </div>
+
+          <div class="seg-row">
+            <div class="seg-now">
+              <p class="seg-kicker"><span id="seg-idx">—</span><span id="seg-label">—</span></p>
+              <p class="seg-text" id="seg-text">—</p>
+            </div>
+            <aside class="seg-list" aria-label="Subtask segments">
+              <div class="seg-list-head"><span id="seg-count">—</span><span class="hint">click to seek</span></div>
+              <ol id="seg-items"></ol>
+            </aside>
+          </div>
+          <video id="session-video" playsinline preload="metadata" muted hidden
+                 style="display:none"></video>
+        </div>
+      </section>
+
+      <!-- ═══════════════ capture rig ═══════════════ -->
+      <section class="section" id="rig">
+        <div class="prose">
+          <p class="ch-no sec-no">03 / CAPTURE</p>
+          <h2>Five anchors, two gloves, one camera</h2>
+          <p>The design target was blunt: everything must mount on the body in a few minutes, survive a day of real work, and leave the wearer able to do their actual job. Anything that needed a tripod, a base station or a clear line of sight was out before we started.</p>
+          <p>What remains is deliberately sparse. Five trackers, at the head, the two wrists and the two ankles. Five poses is a fraction of what a motion-capture suit gives you — and that is the trade we took, because five is what a person will actually wear to work.</p>
+        </div>
+
+        <div class="rig-figure wide-wrap" id="rig">
+          <div class="rig-stage">
+            <video id="rig-film" autoplay muted loop playsinline preload="metadata"
+                   poster="assets/rig/poster.jpg" width="900" height="1125"
+                   aria-label="A camera move over the five-tracker rig worn on an SMPL-X body: the whole rig, then the head camera and its tracker, then the glove and wrist tracker.">
+              <source src="assets/rig/rig.mp4?v=23" type="video/mp4" />
+            </video>
+          </div>
+          <div class="rig-notes">
+            <div class="rig-note" data-at="0,13.2">
+              <p class="rn-k">THE WHOLE RIG</p>
+              <p class="rn-t">Everything rides on the wearer</p>
+              <p class="rn-d">Everything mounts on the body. Nothing stands in
+                the room: no tripod, no base station, no line of sight to keep
+                clear.</p>
+            </div>
+            <div class="rig-note" data-at="4.6">
+              <p class="rn-k">HEAD</p>
+              <p class="rn-t">Tracker + camera, rigidly coupled</p>
+              <p class="rn-d">A GoPro HERO13 with Media Mod is bolted to the
+                head tracker through a printed adapter. The coupling is the
+                point: it turns the camera pose into a measured quantity
+                instead of something to solve for later.</p>
+            </div>
+            <div class="rig-note" data-at="9.3">
+              <p class="rn-k">WRISTS</p>
+              <p class="rn-t">Tracker over the glove cuff</p>
+              <p class="rn-d">The wrist tracker gives a metric end-effector
+                trajectory; the glove under it gives the fingers. Both glove
+                configurations share one mount layout, so swapping gloves does
+                not invalidate a calibration. The ankles carry the same tracker
+                on a lateral strap.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="prose">
+          <p>The gloves are where the dataset earns its last two streams. <strong>MANUS Metagloves</strong> give clean finger articulation. <strong>Wuji gloves</strong><cite data-r="zhou2026touchanything"></cite> trade a little articulation fidelity for seventeen tactile regions per hand, which is the difference between knowing a hand was near an object and knowing it was pressing on it.</p>
+          <p>One more property matters more in the field than any sensor choice. Participant geometry and mount placement are solved <em>once</em>, before any task is recorded, and reused for every recording until the rig comes off. A session costs a donning and a short calibration, not a re-rig.</p>
+          <div class="spec">
+            <div><span class="k">Body</span><span class="v">5 × VIVE Ultimate Tracker — head, wrists, ankles, inside-out, no base stations</span></div>
+            <div><span class="k">Vision</span><span class="v">GoPro HERO13 with Media Mod, rigidly coupled to the head tracker</span></div>
+            <div><span class="k">Hands</span><span class="v">MANUS Metagloves (articulation) or Wuji gloves (articulation + 17-region tactile)</span></div>
+            <div><span class="k">Mounts</span><span class="v">Custom 3D-printed, glove dorsum and lateral ankle, strapped</span></div>
+            <div><span class="k">Setup</span><span class="v">One calibration per mounting configuration, reused across every task recording</span></div>
+          </div>
+          <p class="fig-note">A wearing study on the neutral SMPL-X body: the tracker is HTC's own CAD mesh, the camera and Media Mod are illustrative models, and the glove is the Wuji description package. Mount placement is geometric — it shows where each device sits, not a measured calibration.</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════ pipeline ═══════════════ -->
+      <section class="prose section" id="pipeline">
+        <p class="ch-no sec-no">04 / RECONSTRUCTION</p>
+        <h2>From five poses to a whole body</h2>
+        <p>Sparse sensing moves the cost from hardware to reconstruction, and the bill comes due immediately. A tracker pose is the product of two unknowns — where the device sits on the limb, and how the limb is articulated — and a great many combinations of the two explain the same measurement. Fit them together and a mounting error quietly becomes a pose error. Everything between the five anchors is not observed at all.</p>
+        <p>Our pipeline, <strong>C³</strong>, refuses to solve those unknowns at the same time.</p>
+        <ul class="reqs">
+          <li><strong>Calibrate.</strong> A short prescribed sequence, matched by phase against a reference motion library, gives body shape, metric scale and each sensor-to-anchor transform. Solved once per mounting configuration, and fixed before any motion is inferred.</li>
+          <li><strong>Complete.</strong> A temporal prior — AvatarPoser<cite data-r="jiang2022avatarposer"></cite> extended from three anchors to five and trained on AMASS<cite data-r="mahmood2019amass"></cite> — turns the calibrated anchors into a first whole-body trajectory, supplying the joints no tracker observes.</li>
+          <li><strong>Constrain.</strong> That trajectory is plausible but not yet faithful. Three layers refine it against the measurements, against the body's own surface, and against the floor.</li>
+        </ul>
+        <div class="figure figure-wide">
+          <video autoplay muted loop playsinline preload="metadata"
+                 poster="assets/pipeline-poster.jpg?v=32">
+            <source src="assets/pipeline_anim.mp4?v=32" type="video/mp4" />
+          </video>
+          <p class="caption">One real recording — sandwich making, at 30&nbsp;Hz — replayed inside a stand-in kitchen whose surfaces are placed from the body's own occupancy over the whole clip, so the figure comes right up to them and never through them. Everything else is measured: the five trailing markers are the tracker poses, the body is the solved SMPL-X, and the heat on the hands at the end is the glove's own per-region pressure, region by region. One correction is applied for legibility: the glove fit returns a free rotation at every finger joint, including twist that a finger cannot do, so each joint is projected back onto the motion it has — flexion, and a little abduction at the knuckle.</p>
+        </div>
+        <p>Only the body is reconstructed. Finger articulation and contact are measured directly: the glove reports twenty-one hand points and, in the tactile configuration, seventeen regions of pressure per hand, at roughly 120&nbsp;Hz. The pipeline's job for the hands is alignment, not estimation — the calibrated wrist transform is what carries the glove's own frame onto the solved arm, so the fingers and the pressure land on the same body, on the same clock.</p>
+        <p>The third stage is the one that is easy to under-build. Matching a wrist target says nothing about whether the arm passed through the chest on the way, and an ankle above the floor says nothing about the heel. So the surface layer constrains oriented clearance on the participant's own posed mesh, and the ground layer runs over every posed vertex. All three optimise one trajectory through one shared objective, not one after another.</p>
+        <p>Against tracker-fitted references this reaches <strong class="key">18.0&nbsp;mm</strong> body-point error, against 64.1&nbsp;mm for the strongest baseline we evaluated — AvatarPoser retrained on all five anchors. The number we actually watch is the one at the <strong class="key">seventeen joints no tracker ever sees: 20.3&nbsp;mm</strong>, barely worse than the average over the whole body. A method that merely snapped to its anchors would show the opposite — tight at the five, loose at the elbows and the knees — so it is that near-flat margin, not the headline figure, that says the articulation itself improved.</p>
+      </section>
+
+      <!-- ═══════════════ environments ═══════════════ -->
+      <section class="section" id="environments">
+        <div class="prose prose-head">
+          <p class="ch-no sec-no">05 / ENVIRONMENTS</p>
+          <h2>Five rooms, reconstructed</h2>
+          <p>Because the rig carries no room-side infrastructure, the environment is recovered rather than instrumented. Each capture space is reconstructed once, and every session in it can be replayed inside its own geometry. Each one turns on its own; drag to look around it.</p>
+        </div>
+        <div class="pointcloud-viewer wide-wrap">
+          <div class="scene-buttons" role="group" aria-label="Capture environments">
+            <button type="button" data-scene="laboratory" aria-pressed="true">Laboratory</button>
+            <button type="button" data-scene="industrial_workspace" aria-pressed="false">Industrial workspace</button>
+            <button type="button" data-scene="living_room" aria-pressed="false">Living room</button>
+            <button type="button" data-scene="food-prep_area" aria-pressed="false">Food-preparation area</button>
+            <button type="button" data-scene="study" aria-pressed="false">Study</button>
+          </div>
+          <div class="pose-tools" hidden>
+            <div class="pose-panel">
+              <label class="pose-slider">Yaw <input id="yaw-angle" type="range" min="0" max="360" step="1" /><output for="yaw-angle">0°</output></label>
+              <label class="pose-slider">Pitch <input id="pitch-angle" type="range" min="0" max="360" step="1" /><output for="pitch-angle">0°</output></label>
+              <button id="save-pose" class="pose-action" type="button">Save</button>
+            </div>
+          </div>
+          <div class="pointcloud-viewport">
+            <canvas id="point-cloud" aria-label="Reconstructed capture environments" tabindex="0"></canvas>
+            <div class="pointcloud-loading" aria-hidden="true" hidden><span></span></div>
+            <p class="pointcloud-error" role="status" hidden></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ chapter 06 — on a humanoid ═══════════════ -->
+      <section class="chapter" id="humanoid">
+        <div class="chapter-inner">
+          <div class="chapter-head">
+            <p class="ch-no">06 / EMBODIMENT</p>
+            <h2 class="ch-title">Recorded on a person, performed by a humanoid</h2>
+            <p class="ch-sub">A recording earns its keep when a robot can do something with it. Two unedited sessions are mapped here onto a Unitree G1 carrying two five-finger Wuji hands and played back in physics. A whole-body controller keeps the robot on its own feet through the walking, the leaning and the reaching — the balance is the robot's, not a fixed base or a supporting hand.</p>
+          </div>
+
+          <div class="duo">
+            <figure class="stream">
+              <div class="stream-cap"><span class="sn">A</span>WEIGHING · 5&times;</div>
+              <video autoplay muted loop playsinline preload="metadata"
+                     poster="assets/humanoid/g1_weighing-poster.jpg?v=27">
+                <source src="assets/humanoid/g1_weighing.mp4?v=27" type="video/mp4" />
+              </video>
+              <figcaption>Weighing, 189&nbsp;s at five times speed. The twisting in the right hand is the subject unscrewing bottle caps at the bench.</figcaption>
+            </figure>
+            <figure class="stream">
+              <div class="stream-cap"><span class="sn">B</span>REACTION SETUP · 5&times;</div>
+              <video autoplay muted loop playsinline preload="metadata"
+                     poster="assets/humanoid/g1_reaction-poster.jpg?v=27">
+                <source src="assets/humanoid/g1_reaction.mp4?v=27" type="video/mp4" />
+              </video>
+              <figcaption>Reaction setup, 132&nbsp;s at five times speed. Approach, bench work and departure in one take.</figcaption>
+            </figure>
+          </div>
+
+          <ol class="ch-steps">
+            <li><strong>Retarget.</strong> The solved SMPL-X body is mapped onto the G1's 29 joints, root and feet anchored to the floor the person actually walked on.</li>
+            <li><strong>Balance.</strong> A motion-tracking policy trained in MuJoCo physics follows that reference with joint torques, over whole sessions and through pushes.</li>
+            <li><strong>Hands.</strong> The glove's finger articulation drives twenty joints per hand, collision-aware, so opposition and pinches close without passing through.</li>
+          </ol>
+
+          <div class="ch-stats">
+            <div><span class="n">0</span><span class="l">falls</span></div>
+            <div><span class="n">29</span><span class="l">body joints, in physics</span></div>
+            <div><span class="n">40</span><span class="l">finger joints</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ citation ═══════════════ -->
+      <section class="prose section" id="citation">
+        <p class="ch-no sec-no">07 / CITE</p>
+        <h2>Citation</h2>
+        <p>If EgoExplorer is useful in your work, please cite it as:</p>
+        <div class="bib">
+          <button class="copy-btn" type="button" data-copy="#bibtex" aria-label="Copy BibTeX">
+            <svg class="ico-copy" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <rect x="5.2" y="5.2" width="8.2" height="8.6" rx="1.6"/><path d="M10.8 5.2V3.8A1.6 1.6 0 0 0 9.2 2.2H4.2a1.6 1.6 0 0 0-1.6 1.6v5.4a1.6 1.6 0 0 0 1.6 1.6h1"/></svg>
+            <svg class="ico-done" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3.4 8.4l3 3 6.2-6.6"/></svg>
+            <span class="copy-label">Copy</span>
+          </button>
+        <pre><code id="bibtex">@misc{egoexplorer2026,
+  title  = {EgoExplorer: A Vision-Motion-Touch Observatory for
+            Human Loco-Manipulation In Situ},
+  author = {Anonymous authors},
+  year   = {2026},
+  note   = {Paper under double-blind review}
+}</code></pre>
+        </div>
+        <p class="foot-note">The dataset, the capture toolkit and the reconstruction code will be released.</p>
+      </section>
+    </main>
+
+    <footer class="site-foot">
+      <div class="foot-inner">
+        <div class="foot-mark">
+          <span class="mark-glyph" aria-hidden="true"></span>
+          <span>EgoExplorer</span>
+        </div>
+        <p class="foot-line">A Vision–Motion–Touch Observatory for Human
+          Loco-Manipulation In Situ</p>
+        <nav class="foot-links" aria-label="Project links">
+          <a href="#" data-pending="true">Paper</a>
+          <a href="https://huggingface.co/datasets/InternRobotics/EgoExplorer" target="_blank" rel="noopener">Hugging Face</a>
+          <a href="https://github.com/InternRobotics/EgoExplorer" target="_blank" rel="noopener">Toolkit</a>
+          <a href="#citation">Cite</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="point-cloud-pose.js"></script>
+    <script src="point-cloud-viewer.js"></script>
+    <script src="explorer.js?v=31"></script>
+    <script src="refs.js?v=7"></script>
+    <script src="motion.js?v=20"></script>
+    <script src="copy.js?v=1"></script>
+  </body>
+</html>
