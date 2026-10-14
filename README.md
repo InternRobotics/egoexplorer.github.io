@@ -38,11 +38,13 @@ regenerated from the recordings with the scripts in it.
 ## Citation
 
 ```bibtex
-@misc{egoexplorer2026,
-  title  = {EgoExplorer: A Vision-Motion-Touch Observatory for
-            Human Loco-Manipulation In Situ},
-  author = {Anonymous authors},
-  year   = {2026},
-  note   = {Paper under double-blind review}
+@misc{zhou2026egoexplorer,
+      title={EgoExplorer: A Vision-Motion-Touch Observatory for Human Loco-Manipulation In Situ},
+      author={Yunsong Zhou and Xuekun Jiang and Haiqi Shen and Hangxu Liu and Chaojian Shi and Yujie Liu and Jingyuan Li and Haoran Yang and Jiafei Cao and Dongzhan Zhou and Dong Wang and Yao Mu and Chunhua Shen and Weinan Zhang},
+      year={2026},
+      eprint={2610.18872},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2610.18872},
 }
 ```
