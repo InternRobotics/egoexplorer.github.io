@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Ten-task egocentric montage: a seamless 5 x 2 wall, nothing else.
+"""Ten-task egocentric montage: a seamless 5 x 4 wall, nothing else.
+
+Top two rows: the ten Wuji-glove sessions. Bottom two rows: the same ten tasks,
+in the same order, recorded with MANUS Metagloves.
 
 Only panel 01 of each submitted dashboard is used — the egocentric camera — so
 no body, hand or tactile panel leaks in. That panel sits at exactly the same
@@ -20,6 +23,11 @@ DUR, FPS = 22, 30                   # the dashboards are 30 fps; do not resample
 CROP = (96, 80, 586, 330)           # 16:9 centre of the ego panel
 
 # ordered so the two rows read lab-first, then household
+# The MANUS half is a pre-cut 5 x 2, 1920x432, 22 s wall (one MANUS session per
+# task, GoPro OSD band cropped off), built on the T cluster from the raw bucket
+# videos (promo_manus/manus_wall22.py) -- the raw files are too big to pull here.
+MANUS = OUT / "manus_src_22s.mp4"
+
 SESSIONS = [("session_A", 1), ("session_B", 7), ("session_C", 3), ("session_D", 5),
             ("session_E", 0), ("session_F", 9), ("session_G", 4), ("session_H", 2),
             ("session_I", 14), ("session_J", 6)]
@@ -35,7 +43,13 @@ def main():
                  f"scale={TW}:{TH},fps={FPS},setpts=PTS-STARTPTS[t{i}]")
     layout = "|".join(f"{(i % COLS) * TW}_{(i // COLS) * TH}" for i in range(len(SESSIONS)))
     f.append("".join(f"[t{i}]" for i in range(len(SESSIONS)))
-             + f"xstack=inputs={len(SESSIONS)}:layout={layout}:fill=black[vo]")
+             + f"xstack=inputs={len(SESSIONS)}:layout={layout}:fill=black[wuji]")
+    if not MANUS.exists():
+        sys.exit(f"missing {MANUS}")
+    m = len(SESSIONS)
+    inputs += ["-i", str(MANUS)]
+    f.append(f"[{m}:v]fps={FPS},setpts=PTS-STARTPTS[manus]")
+    f.append("[wuji][manus]vstack=inputs=2[vo]")
     out = OUT / "montage_tasks.mp4"
     r = subprocess.run(["ffmpeg", "-v", "error", "-y"] + inputs +
                        ["-filter_complex", ";".join(f), "-map", "[vo]", "-t", str(DUR),
@@ -46,7 +60,7 @@ def main():
         print(r.stderr[-2500:]); sys.exit(1)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "6", "-i", str(out),
                     "-frames:v", "1", str(OUT / "montage_tasks.png")], check=True)
-    print(f"-> {out} ({out.stat().st_size/1e6:.1f} MB, {COLS}x{ROWS}, {TW*COLS}x{TH*ROWS})")
+    print(f"-> {out} ({out.stat().st_size/1e6:.1f} MB, {COLS}x{2 * ROWS}, {TW*COLS}x{2 * TH*ROWS})")
 
 if __name__ == "__main__":
     main()

@@ -9,3 +9,4 @@ build/film/base.mp4
 build/film/*.bak
 **/__pycache__/
 .DS_Store
+montage/manus_src_22s.mp4
